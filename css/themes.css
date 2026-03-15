@@ -1,0 +1,128 @@
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS — CSS Custom Properties
+   Light theme is the default (:root)
+   Dark theme overrides via [data-theme="dark"] on <html>
+═══════════════════════════════════════════════════ */
+
+:root {
+  /* Backgrounds */
+  --bg-app:        #F5F6FA;
+  --bg-sidebar:    #F8F8FB;
+  --bg-surface:    #FFFFFF;
+  --bg-hover:      #EFEFEF;
+  --bg-selected:   #E8E9F4;
+
+  /* Text */
+  --text-primary:   #1C1C2E;
+  --text-secondary: #717186;
+  --text-muted:     #9999B3;
+  --text-on-accent: #FFFFFF;
+
+  /* Accent (blue) */
+  --accent:         #3B5BDB;
+  --accent-hover:   #2F4AC4;
+  --accent-subtle:  #EEF2FF;
+
+  /* Borders */
+  --border:         #E2E2EA;
+  --border-focus:   #3B5BDB;
+
+  /* Tags */
+  --tag-bg:         #EBEBEB;
+  --tag-text:       #3C3C50;
+
+  /* Buttons */
+  --btn-secondary-bg:   #EBEBEB;
+  --btn-secondary-text: #1C1C2E;
+  --btn-secondary-hover:#DCDCDC;
+  --btn-delete-bg:      #E03131;
+  --btn-delete-hover:   #C92A2A;
+
+  /* Actions panel */
+  --btn-action-bg:      #FFFFFF;
+  --btn-action-border:  #E2E2EA;
+  --btn-action-text:    #1C1C2E;
+  --btn-action-hover:   #F5F5F5;
+
+  /* Sidebar nav active */
+  --nav-active-bg:      #E8E9F4;
+  --nav-active-text:    #3B5BDB;
+
+  /* Modal */
+  --modal-overlay:  rgba(0, 0, 0, 0.45);
+  --modal-bg:       #FFFFFF;
+
+  /* Toast */
+  --toast-success-bg:   #2F9E44;
+  --toast-error-bg:     #E03131;
+
+  /* Misc */
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.10);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.14);
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+
+  /* Typography */
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.8125rem; /* 13px */
+  --font-size-md: 0.875rem;  /* 14px */
+  --font-size-lg: 1rem;      /* 16px */
+  --font-size-xl: 1.125rem;  /* 18px */
+  --font-size-2xl:1.75rem;   /* 28px */
+
+  /* Layout */
+  --sidebar-width:  260px;
+  --list-width:     240px;
+  --actions-width:  220px;
+  --topbar-height:  60px;
+  --bottom-nav-height: 60px;
+}
+
+/* ─── DARK THEME ─────────────────────────────────── */
+[data-theme="dark"] {
+  --bg-app:        #13141F;
+  --bg-sidebar:    #0F1019;
+  --bg-surface:    #1A1B2E;
+  --bg-hover:      #252638;
+  --bg-selected:   #2A2B42;
+
+  --text-primary:   #F0F0F8;
+  --text-secondary: #8888AA;
+  --text-muted:     #5A5A7A;
+
+  --accent:         #4C6EF5;
+  --accent-hover:   #3B5BDB;
+  --accent-subtle:  #1E2340;
+
+  --border:         #2E2F4A;
+  --border-focus:   #4C6EF5;
+
+  --tag-bg:         #2A2B42;
+  --tag-text:       #B0B0CC;
+
+  --btn-secondary-bg:   #2A2B42;
+  --btn-secondary-text: #F0F0F8;
+  --btn-secondary-hover:#343554;
+
+  --btn-action-bg:      #1A1B2E;
+  --btn-action-border:  #2E2F4A;
+  --btn-action-text:    #F0F0F8;
+  --btn-action-hover:   #252638;
+
+  --nav-active-bg:      #252638;
+  --nav-active-text:    #4C6EF5;
+
+  --modal-bg:       #1A1B2E;
+
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.30);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.40);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.50);
+}
+
+/* ─── FONT THEMES ────────────────────────────────── */
+[data-font="sans-serif"] { --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+[data-font="serif"]      { --font-body: 'Georgia', 'Times New Roman', serif; }
+[data-font="monospace"]  { --font-body: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace; }
