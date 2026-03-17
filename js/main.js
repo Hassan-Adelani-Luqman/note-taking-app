@@ -183,6 +183,33 @@ function handleRestore() {
   refreshAfterMutation();
 }
 
+// ─── Share ────────────────────────────────────────
+
+let _shareLabelTimer = null;
+
+async function handleShareNote() {
+  if (!state.selectedNoteId) return;
+  const note = nm.getNoteById(state.selectedNoteId);
+  if (!note) return;
+
+  const link  = sharing.generateShareLink(note);
+  const label = $('share-btn-label');
+
+  try {
+    await navigator.clipboard.writeText(link);
+    ui.showToast('Share link copied to clipboard!', 'success');
+    // Brief "Copied!" label on the button itself
+    if (label) {
+      label.textContent = 'Copied!';
+      if (_shareLabelTimer) clearTimeout(_shareLabelTimer);
+      _shareLabelTimer = setTimeout(() => { label.textContent = 'Copy Share Link'; }, 2000);
+    }
+  } catch {
+    // Clipboard API unavailable — fall back to a prompt
+    prompt('Copy this share link:', link);
+  }
+}
+
 // ─── Delete ───────────────────────────────────────
 
 function handleDeleteRequest() {
@@ -396,6 +423,7 @@ function bindEvents() {
   $('archive-btn')?.addEventListener('click', handleArchive);
   $('restore-btn')?.addEventListener('click', handleRestore);
   $('delete-btn')?.addEventListener('click', handleDeleteRequest);
+  $('share-btn')?.addEventListener('click', handleShareNote);
 
   // Mobile archive/restore/delete
   $('mobile-archive-btn')?.addEventListener('click', handleArchive);
