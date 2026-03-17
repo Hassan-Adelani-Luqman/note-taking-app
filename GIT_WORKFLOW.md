@@ -250,36 +250,11 @@ git commit                        # Complete the merge commit
 
 Shows all commits across branches using `git log --all --oneline --graph`:
 
-![Git log graph](screens/git-log.png)
-
-```
-* bce1ea1 Add share button UI with clipboard copy and confirmation
-* 6384722 Add read-only shared note view rendered from URL hash
-* e1ab635 Add shareable link generation using URL hash encoding
-| * 03715f2 Add formatting toolbar UI and styles
-| * 6114239 Add bold, italic, underline and list formatting commands
-| * 14a0ea5 Replace textarea with contenteditable div for rich text
-|/
-| * 089a987 Add category UI: dropdown, filter bar, and category badges
-| * b0aca64 Add category assignment to notes and filter logic
-| * 19d0db0 Add category creation and persistence to localStorage
-|/
-| * 5b8b5ed Add export/import UI buttons and wire up handlers
-| * 35f95da Add import notes with duplicate prevention and validation
-| * f3af156 Add export notes to JSON functionality
-|/
-* cb28b46 Add .gitignore
-* 2b417a4 add index
-* 6cb17a7 complete note taking app
-```
-
----
+![Git log graph](screenshots/gitlogs.png)
 
 ### 2. Branch Structure
 
 Shows all local and remote branches using `git branch -a`:
-
-![Branch structure](screens/branch-structure.png)
 
 ```
   dev
@@ -302,8 +277,6 @@ Shows all local and remote branches using `git branch -a`:
 
 Shows the conflict markers in `js/main.js` and the resolved state:
 
-![Merge conflict](screens/merge-conflict.png)
-
 See the [Merge Conflict section](#merge-conflict-encountered-and-resolved) above for the full walkthrough.
 
 ---
@@ -311,8 +284,6 @@ See the [Merge Conflict section](#merge-conflict-encountered-and-resolved) above
 ### 4. Example Pull Request
 
 Shows an open PR on GitHub from `feature/export-import-notes` → `dev`:
-
-![Example PR](screens/example-pr.png)
 
 The PR includes:
 - A descriptive title matching the feature branch name
