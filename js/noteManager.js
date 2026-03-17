@@ -49,8 +49,9 @@ export const getNotes = () => _notes;
 
 // ─── CRUD ─────────────────────────────────────────
 
-export const createNote = (title, content, tags) => {
-  const note = new Note(title, content, tags);
+export const createNote = (title, content, tags, category = null) => {
+  const note      = new Note(title, content, tags);
+  note.category   = category;
   _notes.unshift(note); // newest first
   saveNotes(_notes);
   return note;
