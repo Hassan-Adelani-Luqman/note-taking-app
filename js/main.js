@@ -6,6 +6,7 @@ import * as storage     from './storage.js';
 import * as nm          from './noteManager.js';
 import * as ui          from './ui.js';
 import * as themes      from './themes.js';
+import * as sharing     from './sharing.js';
 
 // ─── App State ────────────────────────────────────
 
@@ -26,6 +27,17 @@ const $$ = (sel) => document.querySelectorAll(sel);
 // ─── Init ─────────────────────────────────────────
 
 function init() {
+  // If URL contains a share hash, show read-only view and skip app init
+  const sharedNote = sharing.getSharedNoteFromHash();
+  if (sharedNote) {
+    ui.showSharedNote(sharedNote);
+    document.getElementById('shared-open-app-btn')?.addEventListener('click', () => {
+      history.replaceState(null, '', location.pathname);
+      location.reload();
+    });
+    return;
+  }
+
   // Load data
   const savedNotes = storage.loadNotes();
   nm.initNotes(savedNotes);

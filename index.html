@@ -308,6 +308,32 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════
+       SHARED NOTE VIEW (shown when URL has #share=…)
+  ═══════════════════════════════════════════════ -->
+  <div id="shared-view" hidden aria-label="Shared note">
+    <div class="shared-view-inner">
+      <header class="shared-header">
+        <div class="logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/></svg>
+          <span>Notes</span>
+        </div>
+        <span class="shared-readonly-badge">Read Only</span>
+        <button id="shared-open-app-btn" class="btn-primary btn-sm" type="button">Open App</button>
+      </header>
+
+      <article class="shared-note">
+        <h1 id="shared-title" class="shared-note-title"></h1>
+        <div class="shared-note-meta">
+          <div id="shared-tags" class="note-card-tags"></div>
+          <span id="shared-date" class="shared-note-date"></span>
+        </div>
+        <hr class="meta-divider" />
+        <div id="shared-content" class="shared-note-content"></div>
+      </article>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
        DELETE CONFIRMATION MODAL
   ═══════════════════════════════════════════════ -->
   <div id="delete-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
