@@ -44,3 +44,9 @@ export const deleteCategory = (id) => {
   const cats = getCategories().filter(c => c.id !== id);
   saveCategories(cats);
 };
+
+// ─── Filtering ────────────────────────────────────
+
+// notes: array passed in from noteManager to avoid circular imports
+export const filterNotesByCategory = (notes, categoryId) =>
+  notes.filter(n => !n.archived && n.category === categoryId);
