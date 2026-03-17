@@ -170,9 +170,9 @@ export const renderFlatNoteCard = (note, searchQuery = '') => {
 // ─── Note detail rendering ────────────────────────
 
 export const renderNoteDetail = (note) => {
-  $('note-title').value   = note.title;
-  $('note-tags').value    = note.tags.join(', ');
-  $('note-content').value = note.content;
+  $('note-title').value      = note.title;
+  $('note-tags').value       = note.tags.join(', ');
+  $('note-content').innerHTML = note.content || '';
   $('note-last-edited').textContent = formatDate(note.updatedAt);
   $('note-form').dataset.noteId = note.id;
 
@@ -219,9 +219,9 @@ export const renderNoteDetail = (note) => {
 };
 
 export const showCreateForm = () => {
-  $('note-title').value   = '';
-  $('note-tags').value    = '';
-  $('note-content').value = '';
+  $('note-title').value       = '';
+  $('note-tags').value        = '';
+  $('note-content').innerHTML = '';
   $('note-last-edited').textContent = 'Not yet saved';
   $('note-form').removeAttribute('data-note-id');
   $('status-row').hidden    = true;

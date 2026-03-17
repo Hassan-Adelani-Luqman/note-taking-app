@@ -106,7 +106,7 @@ function handleSaveNote(e) {
 
   const title   = $('note-title').value.trim();
   const tagsRaw = $('note-tags').value;
-  const content = $('note-content').value;
+  const content = $('note-content').innerHTML;
   const tags    = nm.parseTags(tagsRaw);
 
   if (!title) {
@@ -299,7 +299,7 @@ function scheduleDraftSave() {
   _draftTimer = setTimeout(() => {
     const draft = {
       title:   $('note-title').value,
-      content: $('note-content').value,
+      content: $('note-content').innerHTML,
       tags:    $('note-tags').value,
     };
     if (draft.title || draft.content) {
@@ -516,7 +516,7 @@ function bindEvents() {
     if (draft) {
       $('note-title').value   = draft.title   || '';
       $('note-tags').value    = draft.tags    || '';
-      $('note-content').value = draft.content || '';
+      $('note-content').innerHTML = draft.content || '';
     }
     ui.hideDraftBanner();
   });
