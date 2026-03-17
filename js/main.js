@@ -6,6 +6,7 @@ import * as storage     from './storage.js';
 import * as nm          from './noteManager.js';
 import * as ui          from './ui.js';
 import * as themes      from './themes.js';
+import * as editor      from './editor.js';
 
 // ─── App State ────────────────────────────────────
 
@@ -311,6 +312,9 @@ function scheduleDraftSave() {
 // ─── Event binding ────────────────────────────────
 
 function bindEvents() {
+
+  // Rich text editor toolbar + keyboard shortcuts
+  editor.bindEditorEvents();
 
   // Create new note button
   $('create-note-btn').addEventListener('click', () => {
