@@ -83,8 +83,8 @@
 
 /* ─── DARK THEME ─────────────────────────────────── */
 [data-theme="dark"] {
-  --bg-app:        #13141F;
-  --bg-sidebar:    #0F1019;
+  --bg-app:        #0E121B;
+  --bg-sidebar:    #232530;
   --bg-surface:    #1A1B2E;
   --bg-hover:      #252638;
   --bg-selected:   #2A2B42;

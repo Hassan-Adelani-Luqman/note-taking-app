@@ -6,6 +6,12 @@ import * as storage     from './storage.js';
 import * as nm          from './noteManager.js';
 import * as ui          from './ui.js';
 import * as themes      from './themes.js';
+import * as auth        from './auth.js';
+
+// ─── Auth guard ────────────────────────────────────
+if (!auth.isLoggedIn()) {
+  window.location.replace('login.html');
+}
 
 // ─── App State ────────────────────────────────────
 
@@ -515,9 +521,10 @@ function bindEvents() {
     ui.showToast('Font updated', 'success');
   });
 
-  // Settings — logout (placeholder)
+  // Settings — logout
   $('logout-btn')?.addEventListener('click', () => {
-    ui.showToast('Logout is not available in this version', 'error');
+    auth.logout();
+    window.location.replace('login.html');
   });
 
   // Password eye toggles
