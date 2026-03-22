@@ -556,6 +556,13 @@ function bindEvents() {
       ui.showToast('New passwords do not match.', 'error');
       return;
     }
+    const currentUser = auth.getCurrentUser();
+    if (!currentUser) { ui.showToast('Not logged in.', 'error'); return; }
+    const result = auth.changePassword(currentUser.email, oldPw, newPw);
+    if (!result.ok) {
+      ui.showToast(result.error, 'error');
+      return;
+    }
     $('pw-old').value = '';
     $('pw-new').value = '';
     $('pw-confirm').value = '';

@@ -30,4 +30,13 @@ export const register = (email, password) => {
   return { ok: true };
 };
 
+export const changePassword = (email, oldPassword, newPassword) => {
+  const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+  const idx = users.findIndex(u => u.email === email && u.password === oldPassword);
+  if (idx === -1) return { ok: false, error: 'Current password is incorrect.' };
+  users[idx].password = newPassword;
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  return { ok: true };
+};
+
 export const logout = () => localStorage.removeItem(SESSION_KEY);
