@@ -1,3 +1,9 @@
+/* ─── Light mode token overrides (immune to themes.css reverts) ── */
+:root {
+  --bg-hover:    #F3F5F8;
+  --bg-selected: #F3F5F8;
+}
+
 /* ═══════════════════════════════════════════════════
    RESET & BASE
 ═══════════════════════════════════════════════════ */
@@ -57,6 +63,7 @@ h1, h2, h3 { font-weight: 700; line-height: 1.3; }
       "sidebar topbar  topbar  topbar"
       "sidebar listpanel  detail  actions";
     height: 100vh;
+    background: var(--bg-surface);
   }
 
   #sidebar          { grid-area: sidebar; }
@@ -803,6 +810,12 @@ h1, h2, h3 { font-weight: 700; line-height: 1.3; }
 [data-theme="dark"] .btn-delete:hover      { background: #C8C8DE; }
 
 [data-theme="dark"] img[src="icons/system-icon.png"] { filter: invert(1); }
+
+/* ─── Desktop light mode: sidebar + list panel use white background ── */
+@media (min-width: 1024px) {
+  #sidebar   { background: var(--bg-surface); }
+  #list-panel { background: var(--bg-surface); }
+}
 
 /* ─── Dark mode: all panels use #0E121B background ── */
 [data-theme="dark"] #sidebar,
