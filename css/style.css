@@ -4,6 +4,15 @@
   --bg-selected: #F3F5F8;
 }
 
+/* ─── Dark mode token overrides (immune to themes.css reverts) ── */
+[data-theme="dark"] {
+  --bg-hover:         #232530;
+  --bg-selected:      #232530;
+  --nav-active-bg:    #232530;
+  --btn-action-hover: #232530;
+  --tag-bg:           #232530;
+}
+
 /* ═══════════════════════════════════════════════════
    RESET & BASE
 ═══════════════════════════════════════════════════ */

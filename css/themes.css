@@ -86,8 +86,8 @@
   --bg-app:        #0E121B;
   --bg-sidebar:    #232530;
   --bg-surface:    #1A1B2E;
-  --bg-hover:      #252638;
-  --bg-selected:   #2A2B42;
+  --bg-hover:      #232530;
+  --bg-selected:   #232530;
 
   --text-primary:   #F0F0F8;
   --text-secondary: #8888AA;
@@ -100,7 +100,7 @@
   --border:         #2E2F4A;
   --border-focus:   #4C6EF5;
 
-  --tag-bg:         #2A2B42;
+  --tag-bg:         #232530;
   --tag-text:       #B0B0CC;
 
   --btn-secondary-bg:   #2A2B42;
@@ -110,9 +110,9 @@
   --btn-action-bg:      #1A1B2E;
   --btn-action-border:  #2E2F4A;
   --btn-action-text:    #F0F0F8;
-  --btn-action-hover:   #252638;
+  --btn-action-hover:   #232530;
 
-  --nav-active-bg:      #252638;
+  --nav-active-bg:      #232530;
   --nav-active-text:    #4C6EF5;
 
   --modal-bg:       #1A1B2E;
