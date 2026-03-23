@@ -68,7 +68,7 @@ function renderCurrentView(keepSelection = false) {
     ui.renderCategoryFilter(categories, state.activeCategoryId);
     ui.renderNoteList(notes, keepSelection ? state.selectedNoteId : null);
     ui.setListDescription('');
-    ui.setEmptyStateText('No notes yet. Create your first note!');
+    ui.setEmptyStateText("You don't have any notes yet. Start a new note to capture your thoughts and ideas.");
 
   } else if (state.currentView === 'archived') {
     const notes = nm.getArchivedNotes();
@@ -532,29 +532,94 @@ function bindEvents() {
     ui.renderCategoryFilter(updated, state.activeCategoryId);
   });
 
-  // Settings — theme options
-  $$('[data-theme-option]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const themeName = btn.dataset.themeOption;
-      state.prefs.theme = themeName;
-      themes.applyTheme(themeName);
-      storage.savePreferences(state.prefs);
-      ui.updateSettingsUI(state.prefs);
+  // Settings — menu navigation
+  $$('.settings-menu-item[data-settings-page]').forEach(item => {
+    item.addEventListener('click', () => {
+      ui.showSettingsPage(item.dataset.settingsPage);
     });
   });
 
-  // Settings — font options
-  $$('[data-font-option]').forEach(btn => {
+  // Settings — back buttons
+  $$('.settings-back-btn').forEach(btn => {
+    btn.addEventListener('click', () => ui.showSettingsNav());
+  });
+
+  // Settings — apply theme
+  $('apply-theme-btn')?.addEventListener('click', () => {
+    const selected = document.querySelector('input[name="theme-select"]:checked');
+    if (!selected) return;
+    state.prefs.theme = selected.value;
+    themes.applyTheme(selected.value);
+    storage.savePreferences(state.prefs);
+    ui.showToast('Theme updated', 'success');
+  });
+
+  // Settings — apply font
+  $('apply-font-btn')?.addEventListener('click', () => {
+    const selected = document.querySelector('input[name="font-select"]:checked');
+    if (!selected) return;
+    state.prefs.font = selected.value;
+    themes.applyFont(selected.value);
+    storage.savePreferences(state.prefs);
+    ui.showToast('Font updated', 'success');
+  });
+
+  // Settings — logout
+  $('logout-btn')?.addEventListener('click', () => {
+    auth.logout();
+    window.location.replace('login.html');
+  });
+
+  // Password eye toggles
+  $$('.pw-eye-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const fontName = btn.dataset.fontOption;
-      state.prefs.font = fontName;
-      themes.applyFont(fontName);
-      storage.savePreferences(state.prefs);
-      ui.updateSettingsUI(state.prefs);
+      const input = document.getElementById(btn.dataset.target);
+      if (!input) return;
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Toggle password visibility');
     });
+  });
+
+  // Change password form
+  $('change-password-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const oldPw = $('pw-old')?.value.trim();
+    const newPw = $('pw-new')?.value.trim();
+    const confirmPw = $('pw-confirm')?.value.trim();
+    if (!oldPw || !newPw || !confirmPw) {
+      ui.showToast('Please fill in all password fields.', 'error');
+      return;
+    }
+    if (newPw.length < 8) {
+      ui.showToast('New password must be at least 8 characters.', 'error');
+      return;
+    }
+    if (newPw !== confirmPw) {
+      ui.showToast('New passwords do not match.', 'error');
+      return;
+    }
+    const currentUser = auth.getCurrentUser();
+    if (!currentUser) { ui.showToast('Not logged in.', 'error'); return; }
+    const result = auth.changePassword(currentUser.email, oldPw, newPw);
+    if (!result.ok) {
+      ui.showToast(result.error, 'error');
+      return;
+    }
+    $('pw-old').value = '';
+    $('pw-new').value = '';
+    $('pw-confirm').value = '';
+    ui.showToast('Password updated successfully.', 'success');
   });
 
   // FABs (mobile create)
+  $('list-fab')?.addEventListener('click', () => {
+    state.selectedNoteId = null;
+    $$('.note-card').forEach(c => { c.classList.remove('selected'); c.setAttribute('aria-selected', 'false'); });
+    ui.showCreateForm();
+    const draft = storage.loadDraft();
+    if (draft && (draft.title || draft.content)) ui.showDraftBanner();
+  });
   $('fab-search')?.addEventListener('click', () => {
     state.selectedNoteId = null;
     ui.showView('all');

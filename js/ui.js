@@ -28,7 +28,7 @@ const MOBILE_VIEWS = {
   tags:      () => { hideEl('list-panel'); hideEl('detail-panel'); hideEl('search-view'); showEl('tags-view'); hideEl('tag-filtered-view'); hideEl('settings-view'); },
   tagFilter: () => { hideEl('list-panel'); hideEl('detail-panel'); hideEl('search-view'); hideEl('tags-view'); showEl('tag-filtered-view'); hideEl('settings-view'); },
   detail:    () => { hideEl('list-panel'); showEl('detail-panel'); hideEl('search-view'); hideEl('tags-view'); hideEl('tag-filtered-view'); hideEl('settings-view'); },
-  settings:  () => { hideEl('list-panel'); hideEl('detail-panel'); hideEl('search-view'); hideEl('tags-view'); hideEl('tag-filtered-view'); showEl('settings-view'); },
+  settings:  () => { hideEl('list-panel'); hideEl('detail-panel'); hideEl('search-view'); hideEl('tags-view'); hideEl('tag-filtered-view'); showEl('settings-view'); showEl('settings-nav'); hideEl('settings-detail'); },
 };
 
 const showEl = (id) => {
@@ -52,13 +52,23 @@ export const showView = (viewName) => {
     const isSettings = viewName === 'settings';
     $('list-panel').hidden    = isSettings;
     $('detail-panel').hidden  = isSettings;
-    // When entering settings, always hide the actions panel.
-    // When leaving settings, actions-panel remains hidden until a note is selected.
     if (isSettings) {
       const ap = $('actions-panel');
       if (ap) ap.hidden = true;
+      // Desktop: ensure nav visible, auto-open color-theme sub-page
+      $('settings-nav').hidden = false;
+      $('settings-detail').hidden = false;
     }
     $('settings-view').hidden = !isSettings;
+  }
+
+  // Reset settings nav on mobile when leaving settings
+  if (viewName !== 'settings' && isMobile()) {
+    const nav = $('settings-nav');
+    const detail = $('settings-detail');
+    if (nav) nav.hidden = false;
+    if (detail) detail.hidden = true;
+    $$('.settings-subpage').forEach(sp => { sp.hidden = true; });
   }
 
   // Update sidebar active nav
@@ -80,10 +90,12 @@ export const showView = (viewName) => {
 };
 
 const updateHeading = (viewName, extra = '') => {
-  const headingEl = $('main-heading');
-  if (!headingEl) return;
   const map = { all: 'All Notes', archived: 'Archived Notes', search: '', tags: 'Tags', settings: 'Settings' };
-  headingEl.textContent = extra || map[viewName] || '';
+  const text = extra || map[viewName] || '';
+  const headingEl = $('main-heading');
+  if (headingEl) headingEl.textContent = text;
+  const panelHeading = $('list-panel-heading');
+  if (panelHeading) panelHeading.textContent = text || 'All Notes';
 };
 
 // ─── Search heading ───────────────────────────────
@@ -244,6 +256,7 @@ export const showCreateForm = () => {
   $('location-row').hidden  = true;
   $('empty-detail').hidden  = true;
   $('note-form').hidden     = false;
+  if ($('form-actions-desktop')) $('form-actions-desktop').hidden = false;
 
   const actionsPanel = $('actions-panel');
   if (actionsPanel) actionsPanel.hidden = true;
@@ -270,6 +283,7 @@ export const showDetailPanel = (note) => {
 
 export const closeDetailPanel = () => {
   $('note-form').hidden     = true;
+  if ($('form-actions-desktop')) $('form-actions-desktop').hidden = true;
   $('empty-detail').hidden  = false;
   $('detail-subheader').hidden = true;
 
@@ -284,6 +298,7 @@ export const closeDetailPanel = () => {
 
 export const resetDetailToEmpty = () => {
   $('note-form').hidden    = true;
+  if ($('form-actions-desktop')) $('form-actions-desktop').hidden = true;
   $('note-form').removeAttribute('data-note-id');
   $('empty-detail').hidden = false;
   const actionsPanel = $('actions-panel');
@@ -556,12 +571,32 @@ export const showToast = (message, type = 'success') => {
 // ─── Settings panel active states ─────────────────
 
 export const updateSettingsUI = (prefs) => {
-  $$('[data-theme-option]').forEach(btn => {
-    btn.setAttribute('aria-pressed', String(btn.dataset.themeOption === prefs.theme));
+  const themeInput = document.querySelector(`input[name="theme-select"][value="${prefs.theme || 'light'}"]`);
+  if (themeInput) themeInput.checked = true;
+  const fontInput = document.querySelector(`input[name="font-select"][value="${prefs.font || 'sans-serif'}"]`);
+  if (fontInput) fontInput.checked = true;
+};
+
+export const showSettingsPage = (page) => {
+  $$('.settings-subpage').forEach(sp => { sp.hidden = true; });
+  const pageEl = $(`settings-${page}-page`);
+  if (pageEl) pageEl.hidden = false;
+  $$('.settings-menu-item[data-settings-page]').forEach(item => {
+    item.classList.toggle('active', item.dataset.settingsPage === page);
   });
-  $$('[data-font-option]').forEach(btn => {
-    btn.setAttribute('aria-pressed', String(btn.dataset.fontOption === prefs.font));
-  });
+  if (isMobile()) {
+    $('settings-nav').hidden = true;
+    $('settings-detail').hidden = false;
+  }
+};
+
+export const showSettingsNav = () => {
+  if (isMobile()) {
+    $('settings-detail').hidden = true;
+    $('settings-nav').hidden = false;
+  }
+  $$('.settings-menu-item').forEach(item => item.classList.remove('active'));
+  $$('.settings-subpage').forEach(sp => { sp.hidden = true; });
 };
 
 // ─── Helpers ──────────────────────────────────────
