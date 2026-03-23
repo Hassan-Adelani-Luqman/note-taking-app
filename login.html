@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notes — Login</title>
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body class="auth-body">
+
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <svg class="logo-icon" width="22" height="21" viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M27.0489 1.31313C26.0171 -0.652474 22.6235 -0.0350737 19.6905 0.750326C6.9407 5.44873 2.4299 14.9968 0.845103 20.685C0.766703 20.8278 0.719103 20.9916 0.714903 21.1666C0.0877033 23.5802 0.00230334 25.1888 0.000903335 25.242C-0.0228967 25.8202 0.426503 26.3088 1.0047 26.3326C1.0201 26.334 1.0355 26.334 1.0509 26.334C1.6095 26.334 2.0743 25.893 2.0995 25.3288C2.1065 25.158 2.1709 23.9834 2.5671 22.2278C6.0783 22.0794 9.61331 20.7718 13.0853 18.3302C13.3569 18.1398 13.5221 17.8318 13.5319 17.5014C13.5417 17.1696 13.3933 16.8532 13.1343 16.6488L11.5327 15.3804L16.7883 14.8652C17.0025 14.8442 17.2041 14.7588 17.3679 14.6188C17.4813 14.5236 20.1567 12.2332 22.7019 9.56333C26.5729 5.50333 27.9127 2.95953 27.0489 1.31313Z" fill="currentColor"/>
+      </svg>
+      <svg class="logo-text" width="54" height="20" viewBox="0 0 57 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3.528 16V4.672H5.688L11.448 12.76V4.672H13.56V16H11.4L5.64 7.912V16H3.528ZM16.2796 16V4.672H18.4396V16H16.2796ZM27.2515 16.192C26.2755 16.192 25.4035 15.9787 24.6355 15.552C23.8675 15.1147 23.2635 14.5053 22.8235 13.724C22.3835 12.932 22.1635 12.0173 22.1635 10.98C22.1635 9.93200 22.3835 9.01733 22.8235 8.236C23.2635 7.444 23.8675 6.83467 24.6355 6.408C25.4035 5.97067 26.2755 5.752 27.2515 5.752C28.1075 5.752 28.8648 5.912 29.5235 6.232C30.1928 6.552 30.7275 7.00933 31.1275 7.604L29.6195 8.764C29.3368 8.38933 28.9955 8.10667 28.5955 7.916C28.2062 7.71467 27.7635 7.614 27.2675 7.614C26.6368 7.614 26.0755 7.75733 25.5835 8.044C25.1008 8.33067 24.7222 8.73333 24.4475 9.252C24.1728 9.76 24.0355 10.3453 24.0355 11.008C24.0355 11.6507 24.1728 12.2253 24.4475 12.732C24.7222 13.2387 25.1008 13.636 25.5835 13.924C26.0755 14.2013 26.6368 14.34 27.2675 14.34C27.7635 14.34 28.2062 14.244 28.5955 14.052C28.9955 13.8507 29.3368 13.5573 29.6195 13.172L31.1275 14.332C30.7275 14.9267 30.1928 15.3893 29.5235 15.72C28.8648 16.0347 28.1075 16.192 27.2515 16.192ZM38.0707 16.192C37.0947 16.192 36.2227 15.9787 35.4547 15.552C34.6867 15.1147 34.0827 14.5053 33.6427 13.724C33.2027 12.932 32.9827 12.0173 32.9827 10.98C32.9827 9.93200 33.2027 9.01733 33.6427 8.236C34.0827 7.444 34.6867 6.83467 35.4547 6.408C36.2227 5.97067 37.0947 5.752 38.0707 5.752C39.0467 5.752 39.9187 5.97067 40.6867 6.408C41.4547 6.83467 42.0587 7.444 42.4987 8.236C42.9387 9.01733 43.1587 9.93200 43.1587 10.98C43.1587 12.0173 42.9387 12.932 42.4987 13.724C42.0587 14.5053 41.4547 15.1147 40.6867 15.552C39.9187 15.9787 39.0467 16.192 38.0707 16.192ZM38.0707 14.34C38.7227 14.34 39.2947 14.2013 39.7867 13.924C40.2787 13.636 40.6627 13.2333 40.9387 12.716C41.2147 12.1987 41.3527 11.6133 41.3527 10.96C41.3527 10.3067 41.2147 9.72667 40.9387 9.22C40.6627 8.70267 40.2787 8.3 39.7867 8.012C39.2947 7.724 38.7227 7.58 38.0707 7.58C37.4187 7.58 36.8467 7.724 36.3547 8.012C35.8627 8.3 35.4787 8.70267 35.2027 9.22C34.9267 9.72667 34.7887 10.3067 34.7887 10.96C34.7887 11.6133 34.9267 12.1987 35.2027 12.716C35.4787 13.2333 35.8627 13.636 36.3547 13.924C36.8467 14.2013 37.4187 14.34 38.0707 14.34ZM45.4324 16V4.672H47.5924V16H45.4324ZM50.4283 16V4.672H52.5883V14.164H57.4363V16H50.4283Z" fill="currentColor"/>
+      </svg>
+    </div>
+
+    <!-- Heading -->
+    <h1 class="auth-heading">Welcome to Note</h1>
+    <p class="auth-subheading">Please log in to continue</p>
+
+    <!-- Error banner -->
+    <div id="auth-error" class="auth-error" hidden></div>
+
+    <!-- Login Form -->
+    <form id="login-form" class="auth-form" novalidate>
+      <div class="auth-field">
+        <label class="auth-label" for="auth-email">Email Address</label>
+        <input class="auth-input" type="email" id="auth-email" placeholder="email@example.com" autocomplete="email" />
+      </div>
+
+      <div class="auth-field">
+        <div class="auth-label-row">
+          <label class="auth-label" for="auth-password">Password</label>
+          <button type="button" class="auth-forgot-btn" id="forgot-btn">Forgot</button>
+        </div>
+        <div class="auth-input-wrap">
+          <input class="auth-input" type="password" id="auth-password" autocomplete="current-password" />
+          <button type="button" class="auth-eye-btn" id="toggle-password" aria-label="Toggle password visibility">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="auth-btn-primary" id="login-btn">Login</button>
+    </form>
+
+    <!-- Divider -->
+    <p class="auth-divider-text">Or log in with:</p>
+
+    <!-- Google button -->
+    <button type="button" class="auth-btn-google" id="google-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Google
+    </button>
+
+    <!-- Sign up -->
+    <p class="auth-signup-text">
+      No account yet? <button type="button" class="auth-signup-link" id="signup-toggle">Sign Up</button>
+    </p>
+
+  </div>
+
+  <!-- Sign Up Modal (hidden by default) -->
+  <div id="signup-overlay" class="auth-overlay" hidden>
+    <div class="auth-card auth-card--signup">
+      <h2 class="auth-heading">Create Account</h2>
+      <p class="auth-subheading">Sign up to start taking notes</p>
+      <div id="signup-error" class="auth-error" hidden></div>
+      <form id="signup-form" class="auth-form" novalidate>
+        <div class="auth-field">
+          <label class="auth-label" for="signup-email">Email Address</label>
+          <input class="auth-input" type="email" id="signup-email" placeholder="email@example.com" autocomplete="email" />
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="signup-password">Password</label>
+          <div class="auth-input-wrap">
+            <input class="auth-input" type="password" id="signup-password" placeholder="At least 8 characters" autocomplete="new-password" />
+            <button type="button" class="auth-eye-btn" data-target="signup-password" aria-label="Toggle password visibility">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <button type="submit" class="auth-btn-primary">Create Account</button>
+      </form>
+      <p class="auth-signup-text">
+        Already have an account? <button type="button" class="auth-signup-link" id="back-to-login">Log In</button>
+      </p>
+    </div>
+  </div>
+
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>
