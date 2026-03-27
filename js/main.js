@@ -6,22 +6,18 @@ import * as storage     from './storage.js';
 import * as nm          from './noteManager.js';
 import * as ui          from './ui.js';
 import * as themes      from './themes.js';
-import * as auth        from './auth.js';
-
-// ─── Auth guard ────────────────────────────────────
-if (!auth.isLoggedIn()) {
-  window.location.replace('login.html');
-}
+import * as cats        from './categories.js';
 
 // ─── App State ────────────────────────────────────
 
 const state = {
-  selectedNoteId: null,
-  currentView:    'all',   // 'all'|'archived'|'search'|'tag'|'settings'
-  activeTag:      null,
-  searchQuery:    '',
-  prefs:          { theme: 'light', font: 'sans-serif' },
-  pendingDeleteId: null,
+  selectedNoteId:    null,
+  currentView:       'all',   // 'all'|'archived'|'search'|'tag'|'settings'
+  activeTag:         null,
+  activeCategoryId:  null,
+  searchQuery:       '',
+  prefs:             { theme: 'light', font: 'sans-serif' },
+  pendingDeleteId:   null,
 };
 
 // ─── DOM shortcuts ────────────────────────────────
@@ -36,6 +32,9 @@ function init() {
   const savedNotes = storage.loadNotes();
   nm.initNotes(savedNotes);
   state.prefs = storage.loadPreferences();
+
+  // Sync categories into ui module for badge rendering
+  ui.setCategories(cats.getCategories());
 
   // Apply saved theme + font
   themes.applyTheme(state.prefs.theme);
@@ -56,11 +55,17 @@ function init() {
 // ─── Render helpers ───────────────────────────────
 
 function renderCurrentView(keepSelection = false) {
-  const tags = nm.getAllTags();
+  const tags       = nm.getAllTags();
+  const categories = cats.getCategories();
   ui.renderTagList(tags);
+  ui.setCategories(categories);
 
   if (state.currentView === 'all') {
-    const notes = nm.getActiveNotes();
+    const allActive = nm.getActiveNotes();
+    const notes     = state.activeCategoryId
+      ? cats.filterNotesByCategory(allActive, state.activeCategoryId)
+      : allActive;
+    ui.renderCategoryFilter(categories, state.activeCategoryId);
     ui.renderNoteList(notes, keepSelection ? state.selectedNoteId : null);
     ui.setListDescription('');
     ui.setEmptyStateText("You don't have any notes yet. Start a new note to capture your thoughts and ideas.");
@@ -110,10 +115,11 @@ function handleSaveNote(e) {
   e.preventDefault();
   ui.clearValidationErrors();
 
-  const title   = $('note-title').value.trim();
-  const tagsRaw = $('note-tags').value;
-  const content = $('note-content').value;
-  const tags    = nm.parseTags(tagsRaw);
+  const title      = $('note-title').value.trim();
+  const tagsRaw    = $('note-tags').value;
+  const content    = $('note-content').value;
+  const tags       = nm.parseTags(tagsRaw);
+  const categoryId = $('note-category')?.value || null;
 
   if (!title) {
     ui.showValidationError('note-title', 'Title is required.');
@@ -124,7 +130,7 @@ function handleSaveNote(e) {
 
   if (existingId) {
     // Update existing note
-    const updated = nm.updateNote(existingId, { title, content, tags });
+    const updated = nm.updateNote(existingId, { title, content, tags, category: categoryId });
     if (updated) {
       ui.renderNoteDetail(updated);
       ui.showToast('Note saved.', 'success');
@@ -134,7 +140,7 @@ function handleSaveNote(e) {
     }
   } else {
     // Create new note
-    const note = nm.createNote(title, content, tags);
+    const note = nm.createNote(title, content, tags, categoryId);
     state.selectedNoteId = note.id;
     $('note-form').dataset.noteId = note.id;
     ui.renderNoteDetail(note);
@@ -219,10 +225,11 @@ function handleSearch(query) {
 // ─── Navigation ───────────────────────────────────
 
 function handleNavClick(viewName) {
-  state.currentView = viewName;
-  state.activeTag   = null;
-  state.searchQuery = '';
-  state.selectedNoteId = null;
+  state.currentView       = viewName;
+  state.activeTag         = null;
+  state.activeCategoryId  = null;
+  state.searchQuery       = '';
+  state.selectedNoteId    = null;
 
   ui.showView(viewName);
   ui.resetDetailToEmpty();
@@ -370,6 +377,16 @@ function bindEvents() {
     }
   });
 
+  // Category filter bar — event delegation
+  $('category-filter-bar')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-category-id]');
+    if (!btn) return;
+    state.activeCategoryId  = btn.dataset.categoryId || null;
+    state.selectedNoteId    = null;
+    ui.resetDetailToEmpty();
+    renderCurrentView();
+  });
+
   // Mobile search results — delegation
   $('mobile-search-results').addEventListener('click', (e) => {
     const card = e.target.closest('[data-note-id]');
@@ -450,11 +467,8 @@ function bindEvents() {
   // Bottom nav
   $$('.bottom-nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const view = btn.dataset.view;
-      handleNavClick(view);
-      if (view === 'settings' && window.innerWidth >= 1024) {
-        ui.showSettingsPage('color');
-      }
+      handleNavClick(btn.dataset.view);
+      if (btn.dataset.view === 'settings') ui.renderCategoryList(cats.getCategories());
     });
   });
 
@@ -486,7 +500,36 @@ function bindEvents() {
   // Settings button (desktop)
   $('settings-btn')?.addEventListener('click', () => {
     handleNavClick('settings');
-    if (window.innerWidth >= 1024) ui.showSettingsPage('color');
+    ui.renderCategoryList(cats.getCategories());
+  });
+
+  // Settings — add category
+  $('add-category-btn')?.addEventListener('click', () => {
+    const input = $('new-category-input');
+    const name  = input.value.trim();
+    if (!name) return;
+    const created = cats.createCategory(name);
+    if (!created) { ui.showToast('Category already exists.', 'error'); return; }
+    input.value = '';
+    const updated = cats.getCategories();
+    ui.setCategories(updated);
+    ui.renderCategoryList(updated);
+    ui.renderCategoryFilter(updated, state.activeCategoryId);
+  });
+
+  $('new-category-input')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); $('add-category-btn').click(); }
+  });
+
+  // Settings — delete category (delegation)
+  $('category-list')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-delete-category]');
+    if (!btn) return;
+    cats.deleteCategory(btn.dataset.deleteCategory);
+    const updated = cats.getCategories();
+    ui.setCategories(updated);
+    ui.renderCategoryList(updated);
+    ui.renderCategoryFilter(updated, state.activeCategoryId);
   });
 
   // Settings — menu navigation

@@ -13,6 +13,7 @@ export class Note {
     this.content   = content;
     this.tags      = Array.isArray(tags) ? tags.map(t => t.trim()).filter(Boolean) : [];
     this.archived  = false;
+    this.category  = null;
     this.createdAt = Date.now();
     this.updatedAt = Date.now();
     this.location  = null;
@@ -48,8 +49,9 @@ export const getNotes = () => _notes;
 
 // ─── CRUD ─────────────────────────────────────────
 
-export const createNote = (title, content, tags) => {
-  const note = new Note(title, content, tags);
+export const createNote = (title, content, tags, category = null) => {
+  const note      = new Note(title, content, tags);
+  note.category   = category;
   _notes.unshift(note); // newest first
   saveNotes(_notes);
   return note;
@@ -71,6 +73,7 @@ export const updateNote = (id, updates) => {
       ? updates.tags.map(t => t.trim()).filter(Boolean)
       : parseTags(updates.tags);
   }
+  if (updates.category !== undefined) note.category = updates.category;
   if (updates.location !== undefined) note.location = updates.location;
 
   note.updatedAt = Date.now();

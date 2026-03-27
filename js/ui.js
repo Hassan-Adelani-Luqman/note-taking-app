@@ -9,6 +9,14 @@ import { formatDate } from './noteManager.js';
 const $ = (id) => document.getElementById(id);
 const $$ = (sel) => document.querySelectorAll(sel);
 
+// ─── Categories cache ──────────────────────────────
+// Set once on init and after any category mutation so render
+// functions can look up category names without extra imports.
+
+let _categories = [];
+
+export const setCategories = (cats) => { _categories = cats; };
+
 // ─── View management ──────────────────────────────
 // Desktop: sidebar nav + list panel always visible, detail/actions toggled
 // Mobile/tablet: one section visible at a time
@@ -135,8 +143,14 @@ export const renderNoteCard = (note, isSelected = false) => {
     ? `<div class="note-card-tags">${note.tags.map(t => `<span class="tag-pill">${escapeHtml(t)}</span>`).join('')}</div>`
     : '';
 
+  const cat = note.category ? _categories.find(c => c.id === note.category) : null;
+  const categoryHtml = cat
+    ? `<span class="category-badge">${escapeHtml(cat.name)}</span>`
+    : '';
+
   li.innerHTML = `
     <div class="note-card-title">${escapeHtml(note.title || 'Untitled Note')}</div>
+    ${categoryHtml}
     ${tagsHtml}
     <div class="note-card-date">${formatDate(note.updatedAt)}</div>
   `;
@@ -186,6 +200,7 @@ export const renderNoteDetail = (note) => {
   $('note-tags').value    = note.tags.join(', ');
   $('note-content').value = note.content;
   $('note-last-edited').textContent = formatDate(note.updatedAt);
+  populateCategorySelect(_categories, note.category || null);
   $('note-form').dataset.noteId = note.id;
 
   // Status row (archived notes)
@@ -236,6 +251,7 @@ export const showCreateForm = () => {
   $('note-content').value = '';
   $('note-last-edited').textContent = 'Not yet saved';
   $('note-form').removeAttribute('data-note-id');
+  populateCategorySelect(_categories, null);
   $('status-row').hidden    = true;
   $('location-row').hidden  = true;
   $('empty-detail').hidden  = true;
@@ -328,6 +344,78 @@ export const renderTagList = (tags) => {
     li.setAttribute('aria-label', `View notes tagged: ${tag}`);
     li.innerHTML = `${tagIconSvg}<span>${escapeHtml(tag)}</span>`;
     mobileList.appendChild(li);
+  });
+};
+
+// ─── Category filter bar (list panel) ─────────────
+
+export const renderCategoryFilter = (categories, activeCategoryId = null) => {
+  const bar = $('category-filter-bar');
+  if (!bar) return;
+
+  if (categories.length === 0) {
+    bar.hidden = true;
+    return;
+  }
+
+  bar.hidden = false;
+  bar.innerHTML = '';
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'category-filter-btn' + (!activeCategoryId ? ' active' : '');
+  allBtn.dataset.categoryId = '';
+  allBtn.textContent = 'All';
+  allBtn.setAttribute('aria-pressed', String(!activeCategoryId));
+  bar.appendChild(allBtn);
+
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'category-filter-btn' + (cat.id === activeCategoryId ? ' active' : '');
+    btn.dataset.categoryId = cat.id;
+    btn.textContent = escapeHtml(cat.name);
+    btn.setAttribute('aria-pressed', String(cat.id === activeCategoryId));
+    bar.appendChild(btn);
+  });
+};
+
+// ─── Category select in note form ─────────────────
+
+export const renderCategoryList = (categories) => {
+  const list = $('category-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (categories.length === 0) {
+    const li = document.createElement('li');
+    li.className = 'settings-group-desc';
+    li.style.padding = '4px 0';
+    li.textContent = 'No categories yet.';
+    list.appendChild(li);
+    return;
+  }
+
+  const trashSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>`;
+  categories.forEach(cat => {
+    const li = document.createElement('li');
+    li.className = 'category-manage-item';
+    li.innerHTML = `
+      <span>${escapeHtml(cat.name)}</span>
+      <button class="category-delete-btn" data-delete-category="${cat.id}" aria-label="Delete category ${escapeHtml(cat.name)}">${trashSvg}</button>
+    `;
+    list.appendChild(li);
+  });
+};
+
+export const populateCategorySelect = (categories, selectedId = null) => {
+  const sel = $('note-category');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">No Category</option>';
+  categories.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat.id;
+    opt.textContent = cat.name;
+    opt.selected = cat.id === selectedId;
+    sel.appendChild(opt);
   });
 };
 
