@@ -6,12 +6,7 @@ import * as storage     from './storage.js';
 import * as nm          from './noteManager.js';
 import * as ui          from './ui.js';
 import * as themes      from './themes.js';
-import * as auth        from './auth.js';
-
-// ─── Auth guard ────────────────────────────────────
-if (!auth.isLoggedIn()) {
-  window.location.replace('login.html');
-}
+import * as editor      from './editor.js';
 
 // ─── App State ────────────────────────────────────
 
@@ -112,7 +107,7 @@ function handleSaveNote(e) {
 
   const title   = $('note-title').value.trim();
   const tagsRaw = $('note-tags').value;
-  const content = $('note-content').value;
+  const content = $('note-content').innerHTML;
   const tags    = nm.parseTags(tagsRaw);
 
   if (!title) {
@@ -305,7 +300,7 @@ function scheduleDraftSave() {
   _draftTimer = setTimeout(() => {
     const draft = {
       title:   $('note-title').value,
-      content: $('note-content').value,
+      content: $('note-content').innerHTML,
       tags:    $('note-tags').value,
     };
     if (draft.title || draft.content) {
@@ -317,6 +312,9 @@ function scheduleDraftSave() {
 // ─── Event binding ────────────────────────────────
 
 function bindEvents() {
+
+  // Rich text editor toolbar + keyboard shortcuts
+  editor.bindEditorEvents();
 
   // Create new note button
   $('create-note-btn').addEventListener('click', () => {
@@ -594,7 +592,7 @@ function bindEvents() {
     if (draft) {
       $('note-title').value   = draft.title   || '';
       $('note-tags').value    = draft.tags    || '';
-      $('note-content').value = draft.content || '';
+      $('note-content').innerHTML = draft.content || '';
     }
     ui.hideDraftBanner();
   });
