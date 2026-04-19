@@ -196,9 +196,9 @@ export const renderFlatNoteCard = (note, searchQuery = '') => {
 // ─── Note detail rendering ────────────────────────
 
 export const renderNoteDetail = (note) => {
-  $('note-title').value   = note.title;
-  $('note-tags').value    = note.tags.join(', ');
-  $('note-content').value = note.content;
+  $('note-title').value      = note.title;
+  $('note-tags').value       = note.tags.join(', ');
+  $('note-content').innerHTML = note.content || '';
   $('note-last-edited').textContent = formatDate(note.updatedAt);
   populateCategorySelect(_categories, note.category || null);
   $('note-form').dataset.noteId = note.id;
@@ -246,9 +246,9 @@ export const renderNoteDetail = (note) => {
 };
 
 export const showCreateForm = () => {
-  $('note-title').value   = '';
-  $('note-tags').value    = '';
-  $('note-content').value = '';
+  $('note-title').value       = '';
+  $('note-tags').value        = '';
+  $('note-content').innerHTML = '';
   $('note-last-edited').textContent = 'Not yet saved';
   $('note-form').removeAttribute('data-note-id');
   populateCategorySelect(_categories, null);
@@ -566,6 +566,27 @@ export const showToast = (message, type = 'success') => {
     toast.classList.remove('show');
     setTimeout(() => { toast.hidden = true; }, 300);
   }, 2500);
+};
+
+// ─── Shared note view ─────────────────────────────
+
+export const showSharedNote = (note) => {
+  // Overlay the entire app with the read-only view
+  const view = $('shared-view');
+  if (!view) return;
+
+  $('shared-title').textContent  = note.title || 'Untitled Note';
+  $('shared-content').innerHTML  = note.content || '';
+  $('shared-date').textContent   = note.updatedAt
+    ? `Last edited ${formatDate(note.updatedAt)}`
+    : '';
+
+  const tagsEl = $('shared-tags');
+  tagsEl.innerHTML = (note.tags || [])
+    .map(t => `<span class="tag-pill">${escapeHtml(t)}</span>`)
+    .join('');
+
+  view.hidden = false;
 };
 
 // ─── Settings panel active states ─────────────────
