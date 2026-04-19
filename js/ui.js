@@ -480,6 +480,27 @@ export const showToast = (message, type = 'success') => {
   }, 2500);
 };
 
+// ─── Shared note view ─────────────────────────────
+
+export const showSharedNote = (note) => {
+  // Overlay the entire app with the read-only view
+  const view = $('shared-view');
+  if (!view) return;
+
+  $('shared-title').textContent  = note.title || 'Untitled Note';
+  $('shared-content').innerHTML  = note.content || '';
+  $('shared-date').textContent   = note.updatedAt
+    ? `Last edited ${formatDate(note.updatedAt)}`
+    : '';
+
+  const tagsEl = $('shared-tags');
+  tagsEl.innerHTML = (note.tags || [])
+    .map(t => `<span class="tag-pill">${escapeHtml(t)}</span>`)
+    .join('');
+
+  view.hidden = false;
+};
+
 // ─── Settings panel active states ─────────────────
 
 export const updateSettingsUI = (prefs) => {

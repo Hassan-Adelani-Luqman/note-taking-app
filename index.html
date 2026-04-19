@@ -244,6 +244,10 @@
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
       Restore Note
     </button>
+    <button id="share-btn" class="btn-action">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <span id="share-btn-label">Copy Share Link</span>
+    </button>
     <button id="delete-btn" class="btn-action btn-action--danger">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
       Delete Note
@@ -507,6 +511,32 @@
     </div>
 
   </section>
+
+  <!-- ═══════════════════════════════════════════════
+       SHARED NOTE VIEW (shown when URL has #share=…)
+  ═══════════════════════════════════════════════ -->
+  <div id="shared-view" hidden aria-label="Shared note">
+    <div class="shared-view-inner">
+      <header class="shared-header">
+        <div class="logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/></svg>
+          <span>Notes</span>
+        </div>
+        <span class="shared-readonly-badge">Read Only</span>
+        <button id="shared-open-app-btn" class="btn-primary btn-sm" type="button">Open App</button>
+      </header>
+
+      <article class="shared-note">
+        <h1 id="shared-title" class="shared-note-title"></h1>
+        <div class="shared-note-meta">
+          <div id="shared-tags" class="note-card-tags"></div>
+          <span id="shared-date" class="shared-note-date"></span>
+        </div>
+        <hr class="meta-divider" />
+        <div id="shared-content" class="shared-note-content"></div>
+      </article>
+    </div>
+  </div>
 
   <!-- ═══════════════════════════════════════════════
        DELETE CONFIRMATION MODAL
