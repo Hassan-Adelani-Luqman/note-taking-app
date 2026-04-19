@@ -2,10 +2,11 @@
    main.js — App initialization + all event listeners
 ═══════════════════════════════════════════════════ */
 
-import * as storage     from './storage.js';
+import * as storage      from './storage.js';
+import * as themes       from './themes.js';
+import * as exportImport from './exportImport.js';
 import * as nm          from './noteManager.js';
 import * as ui          from './ui.js';
-import * as themes      from './themes.js';
 import * as editor      from './editor.js';
 import * as sharing     from './sharing.js';
 
@@ -527,10 +528,39 @@ function bindEvents() {
     if (window.innerWidth >= 1024) ui.showSettingsPage('color');
   });
 
-  // Settings — menu navigation
-  $$('.settings-menu-item[data-settings-page]').forEach(item => {
-    item.addEventListener('click', () => {
-      ui.showSettingsPage(item.dataset.settingsPage);
+  // Export notes
+  $('export-btn')?.addEventListener('click', () => {
+    exportImport.exportNotes();
+    ui.showToast('Notes exported successfully.', 'success');
+  });
+
+  // Import notes
+  $('import-btn')?.addEventListener('click', () => {
+    $('import-file-input').click();
+  });
+
+  $('import-file-input')?.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const { imported, skipped } = await exportImport.importNotes(file);
+      renderCurrentView();
+      const skipMsg = skipped ? ` ${skipped} duplicate${skipped !== 1 ? 's' : ''} skipped.` : '';
+      ui.showToast(`Imported ${imported} note${imported !== 1 ? 's' : ''}.${skipMsg}`, 'success');
+    } catch (err) {
+      ui.showToast(err.message, 'error');
+    }
+    e.target.value = ''; // reset so the same file can be re-imported
+  });
+
+  // Settings — theme options
+  $$('[data-theme-option]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const themeName = btn.dataset.themeOption;
+      state.prefs.theme = themeName;
+      themes.applyTheme(themeName);
+      storage.savePreferences(state.prefs);
+      ui.updateSettingsUI(state.prefs);
     });
   });
 
