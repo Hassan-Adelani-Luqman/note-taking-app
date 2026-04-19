@@ -183,12 +183,38 @@
 
       <hr class="meta-divider" />
 
-      <textarea
+      <!-- Formatting toolbar -->
+      <div id="editor-toolbar" class="editor-toolbar" role="toolbar" aria-label="Text formatting">
+        <button type="button" class="toolbar-btn" data-command="bold" title="Bold (Ctrl+B)" aria-label="Bold">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 4h8a4 4 0 0 1 0 8H6z"/><path d="M6 12h9a4 4 0 0 1 0 8H6z"/></svg>
+        </button>
+        <button type="button" class="toolbar-btn" data-command="italic" title="Italic (Ctrl+I)" aria-label="Italic">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>
+        </button>
+        <button type="button" class="toolbar-btn" data-command="underline" title="Underline (Ctrl+U)" aria-label="Underline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>
+        </button>
+        <button type="button" class="toolbar-btn" data-command="strikethrough" title="Strikethrough" aria-label="Strikethrough">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="4" y1="12" x2="20" y2="12"/><path d="M17.5 6.5C16.5 4.5 14.5 3 12 3c-3.3 0-5 2-5 4 0 1.5.7 2.5 2 3.2"/><path d="M6 17c1 2 3 3.5 6 3.5 3.5 0 5.5-1.8 5.5-4.5 0-1.4-.5-2.3-1.5-3"/></svg>
+        </button>
+        <div class="toolbar-separator" role="separator"></div>
+        <button type="button" class="toolbar-btn" id="toolbar-ul" data-command="ul" title="Unordered list" aria-label="Bullet list">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.5" fill="currentColor" stroke="none"/></svg>
+        </button>
+        <button type="button" class="toolbar-btn" id="toolbar-ol" data-command="ol" title="Ordered list" aria-label="Numbered list">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+        </button>
+      </div>
+
+      <div
         id="note-content"
         class="note-content-input"
-        placeholder="Start typing your note here..."
+        contenteditable="true"
+        role="textbox"
+        aria-multiline="true"
         aria-label="Note content"
-      ></textarea>
+        data-placeholder="Start typing your note here..."
+      ></div>
 
     </form>
 
@@ -217,6 +243,10 @@
     <button id="restore-btn" class="btn-action" hidden>
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
       Restore Note
+    </button>
+    <button id="share-btn" class="btn-action">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <span id="share-btn-label">Copy Share Link</span>
     </button>
     <button id="delete-btn" class="btn-action btn-action--danger">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
@@ -496,6 +526,32 @@
       <input id="import-file-input" type="file" accept=".json" aria-label="Import notes JSON file" hidden />
     </div>
   </section>
+
+  <!-- ═══════════════════════════════════════════════
+       SHARED NOTE VIEW (shown when URL has #share=…)
+  ═══════════════════════════════════════════════ -->
+  <div id="shared-view" hidden aria-label="Shared note">
+    <div class="shared-view-inner">
+      <header class="shared-header">
+        <div class="logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/></svg>
+          <span>Notes</span>
+        </div>
+        <span class="shared-readonly-badge">Read Only</span>
+        <button id="shared-open-app-btn" class="btn-primary btn-sm" type="button">Open App</button>
+      </header>
+
+      <article class="shared-note">
+        <h1 id="shared-title" class="shared-note-title"></h1>
+        <div class="shared-note-meta">
+          <div id="shared-tags" class="note-card-tags"></div>
+          <span id="shared-date" class="shared-note-date"></span>
+        </div>
+        <hr class="meta-divider" />
+        <div id="shared-content" class="shared-note-content"></div>
+      </article>
+    </div>
+  </div>
 
   <!-- ═══════════════════════════════════════════════
        DELETE CONFIRMATION MODAL

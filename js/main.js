@@ -3,10 +3,12 @@
 ═══════════════════════════════════════════════════ */
 
 import * as storage      from './storage.js';
-import * as nm           from './noteManager.js';
-import * as ui           from './ui.js';
 import * as themes       from './themes.js';
 import * as exportImport from './exportImport.js';
+import * as nm          from './noteManager.js';
+import * as ui          from './ui.js';
+import * as editor      from './editor.js';
+import * as sharing     from './sharing.js';
 
 // ─── App State ────────────────────────────────────
 
@@ -27,6 +29,17 @@ const $$ = (sel) => document.querySelectorAll(sel);
 // ─── Init ─────────────────────────────────────────
 
 function init() {
+  // If URL contains a share hash, show read-only view and skip app init
+  const sharedNote = sharing.getSharedNoteFromHash();
+  if (sharedNote) {
+    ui.showSharedNote(sharedNote);
+    document.getElementById('shared-open-app-btn')?.addEventListener('click', () => {
+      history.replaceState(null, '', location.pathname);
+      location.reload();
+    });
+    return;
+  }
+
   // Load data
   const savedNotes = storage.loadNotes();
   nm.initNotes(savedNotes);
@@ -107,7 +120,7 @@ function handleSaveNote(e) {
 
   const title   = $('note-title').value.trim();
   const tagsRaw = $('note-tags').value;
-  const content = $('note-content').value;
+  const content = $('note-content').innerHTML;
   const tags    = nm.parseTags(tagsRaw);
 
   if (!title) {
@@ -170,6 +183,33 @@ function handleRestore() {
   if (note) ui.renderNoteDetail(note);
   ui.showToast('Note restored.', 'success');
   refreshAfterMutation();
+}
+
+// ─── Share ────────────────────────────────────────
+
+let _shareLabelTimer = null;
+
+async function handleShareNote() {
+  if (!state.selectedNoteId) return;
+  const note = nm.getNoteById(state.selectedNoteId);
+  if (!note) return;
+
+  const link  = sharing.generateShareLink(note);
+  const label = $('share-btn-label');
+
+  try {
+    await navigator.clipboard.writeText(link);
+    ui.showToast('Share link copied to clipboard!', 'success');
+    // Brief "Copied!" label on the button itself
+    if (label) {
+      label.textContent = 'Copied!';
+      if (_shareLabelTimer) clearTimeout(_shareLabelTimer);
+      _shareLabelTimer = setTimeout(() => { label.textContent = 'Copy Share Link'; }, 2000);
+    }
+  } catch {
+    // Clipboard API unavailable — fall back to a prompt
+    prompt('Copy this share link:', link);
+  }
 }
 
 // ─── Delete ───────────────────────────────────────
@@ -300,7 +340,7 @@ function scheduleDraftSave() {
   _draftTimer = setTimeout(() => {
     const draft = {
       title:   $('note-title').value,
-      content: $('note-content').value,
+      content: $('note-content').innerHTML,
       tags:    $('note-tags').value,
     };
     if (draft.title || draft.content) {
@@ -312,6 +352,9 @@ function scheduleDraftSave() {
 // ─── Event binding ────────────────────────────────
 
 function bindEvents() {
+
+  // Rich text editor toolbar + keyboard shortcuts
+  editor.bindEditorEvents();
 
   // Create new note button
   $('create-note-btn').addEventListener('click', () => {
@@ -385,6 +428,7 @@ function bindEvents() {
   $('archive-btn')?.addEventListener('click', handleArchive);
   $('restore-btn')?.addEventListener('click', handleRestore);
   $('delete-btn')?.addEventListener('click', handleDeleteRequest);
+  $('share-btn')?.addEventListener('click', handleShareNote);
 
   // Mobile archive/restore/delete
   $('mobile-archive-btn')?.addEventListener('click', handleArchive);
@@ -618,7 +662,7 @@ function bindEvents() {
     if (draft) {
       $('note-title').value   = draft.title   || '';
       $('note-tags').value    = draft.tags    || '';
-      $('note-content').value = draft.content || '';
+      $('note-content').innerHTML = draft.content || '';
     }
     ui.hideDraftBanner();
   });

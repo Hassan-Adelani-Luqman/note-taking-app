@@ -697,11 +697,69 @@ h1, h2, h3 { font-weight: 700; line-height: 1.3; }
   font-size: var(--font-size-md);
   color: var(--text-primary);
   line-height: 1.75;
-  resize: none;
   padding: 0;
+  word-break: break-word;
 }
 
-.note-content-input::placeholder { color: var(--text-muted); }
+.note-content-input:empty::before {
+  content: attr(data-placeholder);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+/* Rich-text output styles inside the editor */
+.note-content-input ul,
+.note-content-input ol {
+  padding-left: 1.5em;
+  margin: 4px 0;
+}
+
+.note-content-input b, .note-content-input strong { font-weight: 700; }
+.note-content-input i, .note-content-input em     { font-style: italic; }
+.note-content-input u                             { text-decoration: underline; }
+.note-content-input s                             { text-decoration: line-through; }
+
+/* ─── Formatting Toolbar ─────────────────────────── */
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0 10px;
+  flex-shrink: 0;
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  flex-shrink: 0;
+}
+
+.toolbar-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.toolbar-btn.active {
+  background: var(--accent-light, rgba(59 130 246 / 0.12));
+  color: var(--accent);
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
 
 /* Form actions (desktop) — sticky footer outside the scrollable form */
 #form-actions-desktop {
@@ -1422,6 +1480,83 @@ h1, h2, h3 { font-weight: 700; line-height: 1.3; }
 @media (min-width: 1024px) {
   #toast { bottom: 24px; }
 }
+
+/* ═══════════════════════════════════════════════════
+   SHARED NOTE VIEW
+═══════════════════════════════════════════════════ */
+
+#shared-view {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--bg-primary);
+  overflow-y: auto;
+}
+
+.shared-view-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.shared-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.shared-header .logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: var(--font-size-md);
+  color: var(--text-primary);
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.shared-readonly-badge {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.shared-note-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.shared-note-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.shared-note-date {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.shared-note-content {
+  font-size: var(--font-size-md);
+  line-height: 1.75;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.shared-note-content ul,
+.shared-note-content ol { padding-left: 1.5em; margin: 4px 0; }
 
 /* ═══════════════════════════════════════════════════
    BOTTOM NAV
